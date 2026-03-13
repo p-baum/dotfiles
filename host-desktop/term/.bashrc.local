@@ -1,0 +1,2 @@
+echo "SET NEXTCLOUD_DIR in .bashrc.local
+export NEXTCLOUD_DIR=

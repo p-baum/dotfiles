@@ -7,6 +7,8 @@
 
 PS1='[\u@\h \W]\$ '
 
+export PATH=$HOME/.local/bin:$HOME/Development/bin:$PATH
+
 cold-store() {
   if [[ -z "$2" ]]; then
     echo "Provide SRC[/] and DST"
@@ -15,21 +17,20 @@ cold-store() {
   rsync --archive --hard-links --sparse --one-file-system --numeric-ids "$1" --itemize-changes --human-readable rsync://pi.lan/"$2"
 }
 
-PATH=$HOME/.local/bin:$PATH
-export NEXTCLOUD_DIR="/mnt/E/sync/Nextcloud Paul"
-. "${NEXTCLOUD_DIR}/.shell"
-
-
 alias hibernate='/usr/bin/systemctl hibernate'
 alias rs='python manage.py runserver'
 alias dton='tp-switch pcplug on; sleep 2; wake xdesktop; while ! ping -c 1 xdesktop &>/dev/null; do echo -n .; sleep 1; done; echo " OK"'
 alias dtoff='ssh -t xdesktop systemctl poweroff; (sleep 20 && tp-switch pcplug off &>/dev/null) &'
-alias update='sudo update'
+alias update='sudo pacman -Sy --noconfirm && sudo pacman -Su --noconfirm && yay -Su --noconfirm'
 alias upoff='sudo update && poweroff'
 alias btc='vpn-bypass -g -- chromium --app="https://www.binance.com/en/trade/BTC_USDT"'
 alias off='update && poweroff'
 alias rsynca='rsync --archive --hard-links --sparse --numeric-ids --human-readable --info=progress2 --no-inc-recursive -z'
-
+alias windows-vm1="xfreerdp /u:admin /cert:ignore /workarea /v:192.168.178.122 -sec-nla"
+alias winserver-1="xfreerdp /u:Administrator /cert:ignore /workarea /v:192.168.178.121 -sec-nla"
+alias dc='docker compose'
+alias myip='curl -s http://whatismyip.akamai.com/'
+alias pwgen='pwgen -1vyr "=!-@_#*\{}[]<>()|,.\`\´\\~\"^;:/$%'\''" 16 | tee /dev/stderr | xclip -selection c && echo "[Password on clipboard!]" 1>&2'
 
 pdfenc() {
   pdftk "$1" output "${1%.pdf}.enc.pdf" user_pw PROMPT allow AllFeatures
@@ -116,3 +117,12 @@ PS1="$(echo -n "$PS1" | sed 's/\\[$>] \?$//')\$CUSTOM_PS1\$ "
 
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 export CAPACITOR_ANDROID_STUDIO_PATH=/opt/android-studio/bin/studio.sh
+
+if [[ -f .bashrc.local ]]; then
+    . .bashrc.local
+    if [[ -z "$NEXTCLOUD_DIR" ]]; then
+        echo "NEXTCLOUD_DIR not set - cannot use shared PI_CODING_AGENT_DIR" 1>&2
+    else
+        export PI_CODING_AGENT_DIR=${NEXTCLOUD_DIR}/Development/.pi/agent
+    fi
+fi

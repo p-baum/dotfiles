@@ -12,12 +12,13 @@ HOST_DIR=host-${1:-$HOSTNAME}
 }
 
 shift || true
+args=("$@")
 
 for dir in common "$HOST_DIR"; do
     find "$dir" -mindepth 1 -maxdepth 1 -type d | read || continue
     pushd "$dir" &>/dev/null
     echo "Stowing $dir files..."
-    [[ "$#" -gt 0 ]] || set -- *
+    [[ "${#args[@]}" -gt 0 ]] || set -- *
     stow -t "$HOME" "$@"
     popd &>/dev/null
 done
