@@ -1,0 +1,15 @@
+[user]
+	email = maintenance04@list-info.de
+	name = Paul Baumann
+[cola]
+	spellcheck = false
+[git]
+	defaultCloneDirectory = /home/x/git
+[init]
+	defaultBranch = main
+[commit]
+	template = /home/x/.gitmessage
+[rebase]
+	autosquash = true
+[core]
+	editor = nano
